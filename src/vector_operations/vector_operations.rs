@@ -26,9 +26,9 @@ pub(crate) mod vector_operations {
             let second_vec = vec![-1.0, -1.0, -1.0];
             let solution = vec![0.0, 0.0, 0.0];
 
-            vector_addition(&mut firstVec, &secondVec);
+            vector_addition(&mut first_vec, &second_vec);
 
-            assert_eq!(firstVec, solution);
+            assert_eq!(first_vec, solution);
         }
     }
 }

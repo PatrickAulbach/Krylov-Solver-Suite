@@ -4,6 +4,7 @@ mod matrix_vector_operations {
     use std::io::{BufRead, BufReader};
 
     use crate::vector_operations::vector_operations;
+    use std::path::Path;
 
     pub fn matrix_vector_multiplication(matrix: &Vec<Vec<f64>>, vector: &Vec<f64>, solution: &mut Vec<f64>) {
         let mut buffer: f64 = 0.0;
@@ -36,8 +37,8 @@ mod matrix_vector_operations {
         return vector_operations::euclidean_norm(&solution);
     }
 
-    fn read_matrix_from_file(path: &str) -> Vec<Vec<f64>> {
-        let mut file = BufReader::new(File::open("matrix.txt").unwrap());
+    fn read_matrix_from_file(path: &Path) -> Vec<Vec<f64>> {
+        let mut file = BufReader::new(File::open(path).unwrap());
 
         let matrix: Vec<Vec<f64>> = file.lines()
             .map(|f| f.unwrap().split(char::is_whitespace)
@@ -50,28 +51,44 @@ mod matrix_vector_operations {
 
     #[cfg(test)]
     mod tests {
-
         use super::*;
 
         #[test]
         fn test_matrix_vector_multiplication_with_3_times_3_matrix() {
-            let x = vec![vec![1.0, 0.0, 0.0], vec![0.0, 1.0, 0.0], vec![0.0, 0.0, 1.0]];
-            let y = vec![1.0, 1.0, 1.0];
+            let matrix = read_matrix_from_file(Path::new("src/matrix_vector_operations/unit_test_matrix_3x3.txt"));
+            let x = vec![1.0, 1.0, 1.0];
             let mut solution: Vec<f64> = Vec::new();
 
-            matrix_vector_multiplication(&x, &y, &mut solution);
+            matrix_vector_multiplication(&matrix, &x, &mut solution);
 
-            assert_eq!(solution, vec![1.0, 1.0, 1.0]);
+            assert_eq!(solution, vec![3.0, 3.0, 3.0]);
+        }
+
+        #[test]
+        fn test_matrix_vector_multiplication_with_50_times_50_matrix() {
+            let matrix = read_matrix_from_file(Path::new("src/matrix_vector_operations/unit_test_matrix_50x50.txt"));
+            let mut x: Vec<f64> = Vec::new();
+            let mut solution: Vec<f64> = Vec::new();
+            let mut vector_to_compare: Vec<f64> = Vec::new();
+
+            for i in 0..matrix[0].len() {
+                x.push(1.0);
+                vector_to_compare.push(50.0);
+            }
+
+            matrix_vector_multiplication(&matrix, &x, &mut solution);
+
+            assert_eq!(solution, vector_to_compare);
         }
 
         #[test]
         #[should_panic]
         fn test_matrix_vector_multiplication_mismatching_vector_and_matrix_should_panic() {
-            let x = vec![vec![1.0, 0.0, 0.0, 0.0], vec![0.0, 1.0, 0.0, 0.0], vec![0.0, 0.0, 1.0, 0.0]];
-            let y = vec![1.0, 1.0, 1.0];
+            let matrix = read_matrix_from_file(Path::new("src/matrix_vector_operations/unit_test_matrix_3x3.txt"));
+            let x = vec![1.0, 1.0, 1.0, 1.0];
             let mut solution: Vec<f64> = Vec::new();
 
-            matrix_vector_multiplication(&x, &y, &mut solution);
+            matrix_vector_multiplication(&matrix, &x, &mut solution);
         }
     }
 }
