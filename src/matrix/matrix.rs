@@ -1,4 +1,4 @@
-pub(crate) struct Matrix {
+pub struct Matrix {
     columns: usize,
     rows: usize,
     data: Vec<Vec<f64>>
@@ -13,15 +13,15 @@ impl Matrix {
         }
     }
 
-    pub(crate) fn get_matrix(&self) -> Vec<Vec<f64>> {
+    pub fn get_matrix(&self) -> Vec<Vec<f64>> {
         self.data.to_vec()
     }
 
-    pub(crate) fn get_column_len(&self) -> usize {
+    pub fn get_column_len(&self) -> usize {
         self.columns
     }
 
-    pub(crate) fn get_row_len(&self) -> usize {
+    pub fn get_row_len(&self) -> usize {
         self.rows
     }
 

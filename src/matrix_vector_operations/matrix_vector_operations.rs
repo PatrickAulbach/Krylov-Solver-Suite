@@ -11,20 +11,20 @@ mod matrix_vector_operations {
     pub fn matrix_vector_multiplication(matrix: &Matrix, vector: &Vec<f64>, solution: &mut Vec<f64>) {
         let mut buffer: f64 = 0.0;
 
-        if matrix[0].len() != vector.len() {
-            panic!("Dimensions doesn't match. Dimensions are: [{}][{}], [{}]", matrix.len(), matrix[0].len(), vector.len());
+        if matrix.get_row_len() != vector.len() {
+            panic!("Dimensions doesn't match. Dimensions are: [{}][{}], [{}]", matrix.get_column_len(), matrix.get_row_len(), vector.len());
         }
 
         for i in 0..vector.len() {
-            for j in 0..matrix[0].len() {
-                buffer += matrix[i][j] * vector[j];
+            for j in 0..matrix.get_row_len() {
+                buffer += matrix.get_matrix()[i][j] * vector[j];
             }
             solution.push(buffer);
             buffer = 0.0;
         }
     }
 
-    fn compute_residuum(matrix: Matrix, vector: &Vec<f64>, right_hand_side: &Vec<f64>) -> f64 {
+    fn compute_residuum(matrix: &Matrix, vector: &Vec<f64>, right_hand_side: &Vec<f64>) -> f64 {
         let mut solution: Vec<f64> = Vec::new();
         let mut negative_right_hand_side: Vec<f64> = Vec::new();
 
@@ -42,9 +42,9 @@ mod matrix_vector_operations {
     fn read_matrix_from_file(path: &Path) -> Matrix {
         let mut file = BufReader::new(File::open(path).unwrap());
 
-        let mut column = String::new();
+        let mut columns = String::new();
         let mut rows = String::new();
-        file.read_line(&mut column).unwrap();
+        file.read_line(&mut columns).unwrap();
         file.read_line(&mut rows).unwrap();
 
         let data = file.lines()
@@ -53,7 +53,7 @@ mod matrix_vector_operations {
                 .collect())
             .collect();
 
-        return Matrix::new(3, 3, data);
+        return Matrix::new(columns.trim().parse().unwrap(), rows.trim().parse().unwrap(), data);
     }
 
     #[cfg(test)]
@@ -78,7 +78,7 @@ mod matrix_vector_operations {
             let mut solution: Vec<f64> = Vec::new();
             let mut vector_to_compare: Vec<f64> = Vec::new();
 
-            for i in 0..matrix[0].len() {
+            for i in 0..matrix.get_row_len() {
                 x.push(1.0);
                 vector_to_compare.push(50.0);
             }
