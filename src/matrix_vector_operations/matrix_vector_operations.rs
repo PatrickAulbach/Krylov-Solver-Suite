@@ -5,24 +5,26 @@ mod matrix_vector_operations {
 
     use crate::vector_operations::vector_operations;
     use std::path::Path;
+    use crate::matrix;
+    use crate::matrix::Matrix;
 
-    pub fn matrix_vector_multiplication(matrix: &Vec<Vec<f64>>, vector: &Vec<f64>, solution: &mut Vec<f64>) {
+    pub fn matrix_vector_multiplication(matrix: &Matrix, vector: &Vec<f64>, solution: &mut Vec<f64>) {
         let mut buffer: f64 = 0.0;
 
-        if matrix[0].len() != vector.len() {
-            panic!("Dimensions doesn't match. Dimensions are: [{}][{}], [{}]", matrix.len(), matrix[0].len(), vector.len());
+        if matrix.get_row_len() != vector.len() {
+            panic!("Dimensions doesn't match. Dimensions are: [{}][{}], [{}]", matrix.get_column_len(), matrix.get_row_len(), vector.len());
         }
 
         for i in 0..vector.len() {
-            for j in 0..matrix[0].len() {
-                buffer += matrix[i][j] * vector[j];
+            for j in 0..matrix.get_row_len() {
+                buffer += matrix.get_matrix()[i][j] * vector[j];
             }
             solution.push(buffer);
             buffer = 0.0;
         }
     }
 
-    fn compute_residuum(matrix: &Vec<Vec<f64>>, vector: &Vec<f64>, right_hand_side: &Vec<f64>) -> f64 {
+    fn compute_residuum(matrix: &Matrix, vector: &Vec<f64>, right_hand_side: &Vec<f64>) -> f64 {
         let mut solution: Vec<f64> = Vec::new();
         let mut negative_right_hand_side: Vec<f64> = Vec::new();
 
@@ -30,23 +32,28 @@ mod matrix_vector_operations {
             negative_right_hand_side.push(-right_hand_side[i]);
         }
 
-        matrix_vector_multiplication(matrix, vector, &mut solution);
+        matrix_vector_multiplication(&matrix, vector, &mut solution);
 
         vector_operations::vector_addition(&mut solution, &negative_right_hand_side);
 
         return vector_operations::euclidean_norm(&solution);
     }
 
-    fn read_matrix_from_file(path: &Path) -> Vec<Vec<f64>> {
+    fn read_matrix_from_file(path: &Path) -> Matrix {
         let mut file = BufReader::new(File::open(path).unwrap());
 
-        let matrix: Vec<Vec<f64>> = file.lines()
+        let mut columns = String::new();
+        let mut rows = String::new();
+        file.read_line(&mut columns).unwrap();
+        file.read_line(&mut rows).unwrap();
+
+        let data = file.lines()
             .map(|f| f.unwrap().split(char::is_whitespace)
                 .map(|number| number.parse().unwrap())
                 .collect())
             .collect();
 
-        return matrix;
+        return Matrix::new(columns.trim().parse().unwrap(), rows.trim().parse().unwrap(), data);
     }
 
     #[cfg(test)]
@@ -71,7 +78,7 @@ mod matrix_vector_operations {
             let mut solution: Vec<f64> = Vec::new();
             let mut vector_to_compare: Vec<f64> = Vec::new();
 
-            for i in 0..matrix[0].len() {
+            for i in 0..matrix.get_row_len() {
                 x.push(1.0);
                 vector_to_compare.push(50.0);
             }
