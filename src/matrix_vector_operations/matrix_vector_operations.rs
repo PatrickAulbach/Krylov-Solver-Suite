@@ -39,22 +39,21 @@ mod matrix_vector_operations {
         return vector_operations::euclidean_norm(&solution);
     }
 
-    fn read_matrix_from_file(path: &Path) -> matrix::Matrix {
+    fn read_matrix_from_file(path: &Path) -> Matrix {
         let mut file = BufReader::new(File::open(path).unwrap());
 
-        let mut s = String::new();
-        let mut s = String::new();
-        f.read_line(&mut s).unwrap();
-        f.read_line(&mut s).unwrap();
-        let mut matrix = Matrix::new(3, 3);
+        let mut column = String::new();
+        let mut rows = String::new();
+        file.read_line(&mut column).unwrap();
+        file.read_line(&mut rows).unwrap();
 
-        matrix = file.lines()
+        let data = file.lines()
             .map(|f| f.unwrap().split(char::is_whitespace)
                 .map(|number| number.parse().unwrap())
                 .collect())
             .collect();
 
-        return matrix;
+        return Matrix::new(3, 3, data);
     }
 
     #[cfg(test)]
