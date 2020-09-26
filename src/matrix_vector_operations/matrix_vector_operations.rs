@@ -5,8 +5,10 @@ mod matrix_vector_operations {
 
     use crate::vector_operations::vector_operations;
     use std::path::Path;
+    use crate::matrix;
+    use crate::matrix::Matrix;
 
-    pub fn matrix_vector_multiplication(matrix: &Vec<Vec<f64>>, vector: &Vec<f64>, solution: &mut Vec<f64>) {
+    pub fn matrix_vector_multiplication(matrix: &Matrix, vector: &Vec<f64>, solution: &mut Vec<f64>) {
         let mut buffer: f64 = 0.0;
 
         if matrix[0].len() != vector.len() {
@@ -22,7 +24,7 @@ mod matrix_vector_operations {
         }
     }
 
-    fn compute_residuum(matrix: &Vec<Vec<f64>>, vector: &Vec<f64>, right_hand_side: &Vec<f64>) -> f64 {
+    fn compute_residuum(matrix: Matrix, vector: &Vec<f64>, right_hand_side: &Vec<f64>) -> f64 {
         let mut solution: Vec<f64> = Vec::new();
         let mut negative_right_hand_side: Vec<f64> = Vec::new();
 
@@ -30,17 +32,23 @@ mod matrix_vector_operations {
             negative_right_hand_side.push(-right_hand_side[i]);
         }
 
-        matrix_vector_multiplication(matrix, vector, &mut solution);
+        matrix_vector_multiplication(&matrix, vector, &mut solution);
 
         vector_operations::vector_addition(&mut solution, &negative_right_hand_side);
 
         return vector_operations::euclidean_norm(&solution);
     }
 
-    fn read_matrix_from_file(path: &Path) -> Vec<Vec<f64>> {
+    fn read_matrix_from_file(path: &Path) -> matrix::Matrix {
         let mut file = BufReader::new(File::open(path).unwrap());
 
-        let matrix: Vec<Vec<f64>> = file.lines()
+        let mut s = String::new();
+        let mut s = String::new();
+        f.read_line(&mut s).unwrap();
+        f.read_line(&mut s).unwrap();
+        let mut matrix = Matrix::new(3, 3);
+
+        matrix = file.lines()
             .map(|f| f.unwrap().split(char::is_whitespace)
                 .map(|number| number.parse().unwrap())
                 .collect())
