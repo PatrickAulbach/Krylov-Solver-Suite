@@ -1,4 +1,4 @@
-mod matrix_vector_operations {
+pub (crate) mod matrix_vector_operations {
     use std::env;
     use std::fs::File;
     use std::io::{BufRead, BufReader};
