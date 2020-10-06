@@ -1,4 +1,4 @@
-mod matrix_vector_operations {
+pub (crate) mod matrix_vector_operations {
     use std::env;
     use std::fs::File;
     use std::io::{BufRead, BufReader};
@@ -15,12 +15,8 @@ mod matrix_vector_operations {
             panic!("Dimensions doesn't match. Dimensions are: [{}][{}], [{}]", matrix.get_column_len(), matrix.get_row_len(), vector.len());
         }
 
-        for i in 0..vector.len() {
-            for j in 0..matrix.get_row_len() {
-                buffer += matrix.get_matrix()[i][j] * vector[j];
-            }
-            solution.push(buffer);
-            buffer = 0.0;
+        for i in 0..matrix.get_column_len() {
+            solution.push(vector_operations::scalar_product(&matrix.get_matrix()[i], vector));
         }
     }
 

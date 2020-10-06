@@ -6,8 +6,7 @@ use std::path::Path;
 #[path = "matrix/matrix.rs"] mod matrix;
 
 fn main() {
-
-    // TODO: Matrix Object, because q vectors need to be saved
+    
     //compute first q vector: ||b|| * b
     //n: Dimension of Krylov Subspace. Must be > 1
     //for k in 0..n
