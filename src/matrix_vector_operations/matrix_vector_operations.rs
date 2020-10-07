@@ -29,7 +29,7 @@ pub (crate) mod matrix_vector_operations {
         return vector_operations::euclidean_norm(&solution);
     }
 
-    fn read_matrix_from_file(path: &Path) -> Matrix {
+    pub fn read_matrix_from_file(path: &Path) -> Matrix {
         let mut file = BufReader::new(File::open(path).unwrap());
 
         let mut columns = String::new();

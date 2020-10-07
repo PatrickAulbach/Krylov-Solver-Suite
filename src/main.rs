@@ -1,21 +1,17 @@
 use std::env;
 use std::path::Path;
+use crate::vector_operations::vector_operations::{euclidean_norm, scalar_product, scalar_vector_multiplication};
+use crate::matrix_vector_operations::matrix_vector_operations::matrix_vector_multiplication;
+use crate::matrix::Matrix;
+
 
 #[path = "vector_operations/vector_operations.rs"] mod vector_operations;
 #[path = "matrix_vector_operations/matrix_vector_operations.rs"] mod matrix_vector_operations;
 #[path = "matrix/matrix.rs"] mod matrix;
+#[path = "arnoldi_method.rs"] mod arnoldi_method;
 
 fn main() {
-    
-    //compute first q vector: ||b|| * b
-    //n: Dimension of Krylov Subspace. Must be > 1
-    //for k in 0..n
-        //qk = A * qk-1
 
-        //for j in 0..k-1
-            //hj,k-1 = qj*qk
-            //qk = qk - hj,k-1*qj
-        //hk,k-1 = ||qk||
-        //qk = qk * 1/hk,k-1
+    arnoldi_method::arnoldi_method::arnoldi_method(Path::new("src/matrix_vector_operations/unit_test_matrix_3x3.txt"), &vec![1.0, 1.0, 1.0]);
 
 }
