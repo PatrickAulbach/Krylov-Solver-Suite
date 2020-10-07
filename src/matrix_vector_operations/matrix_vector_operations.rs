@@ -9,7 +9,6 @@ pub (crate) mod matrix_vector_operations {
     use crate::matrix::Matrix;
 
     pub fn matrix_vector_multiplication(matrix: &Matrix, vector: &Vec<f64>, solution: &mut Vec<f64>) {
-        let mut buffer: f64 = 0.0;
 
         if matrix.get_row_len() != vector.len() {
             panic!("Dimensions doesn't match. Dimensions are: [{}][{}], [{}]", matrix.get_column_len(), matrix.get_row_len(), vector.len());
@@ -22,15 +21,10 @@ pub (crate) mod matrix_vector_operations {
 
     fn compute_residuum(matrix: &Matrix, vector: &Vec<f64>, right_hand_side: &Vec<f64>) -> f64 {
         let mut solution: Vec<f64> = Vec::new();
-        let mut negative_right_hand_side: Vec<f64> = Vec::new();
-
-        for i in 0..right_hand_side.len() {
-            negative_right_hand_side.push(-right_hand_side[i]);
-        }
 
         matrix_vector_multiplication(&matrix, vector, &mut solution);
 
-        vector_operations::vector_addition(&mut solution, &negative_right_hand_side);
+        vector_operations::vector_addition_subtraction(&mut solution, right_hand_side, true);
 
         return vector_operations::euclidean_norm(&solution);
     }

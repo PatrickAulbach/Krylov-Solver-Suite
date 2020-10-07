@@ -1,9 +1,16 @@
 pub(crate) mod vector_operations {
 
-    pub fn vector_addition(first_vector: &mut Vec<f64>, second_vector: &Vec<f64>) {
-        for i in 0..first_vector.len() {
-            first_vector[i] += second_vector[i];
+    pub fn vector_addition_subtraction(first_vector: &mut Vec<f64>, second_vector: &Vec<f64>, is_subtraction: bool) {
+        if is_subtraction {
+            for i in 0..first_vector.len() {
+                first_vector[i] -= second_vector[i];
+            }
+        } else {
+            for i in 0..first_vector.len() {
+                first_vector[i] += second_vector[i];
+            }
         }
+
     }
 
     pub fn euclidean_norm(vector: &Vec<f64>) -> f64 {
@@ -46,7 +53,18 @@ pub(crate) mod vector_operations {
             let second_vec = vec![-1.0, -1.0, -1.0];
             let solution = vec![0.0, 0.0, 0.0];
 
-            vector_addition(&mut first_vec, &second_vec);
+            vector_addition_subtraction(&mut first_vec, &second_vec, false);
+
+            assert_eq!(first_vec, solution);
+        }
+
+        #[test]
+        fn test_vector_subtraction_with_two_3_times_3_vectors() {
+            let mut first_vec = vec![1.0, 1.0, 1.0];
+            let second_vec = vec![1.0, 1.0, 1.0];
+            let solution = vec![0.0, 0.0, 0.0];
+
+            vector_addition_subtraction(&mut first_vec, &second_vec, true);
 
             assert_eq!(first_vec, solution);
         }
