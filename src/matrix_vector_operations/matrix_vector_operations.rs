@@ -14,6 +14,8 @@ pub (crate) mod matrix_vector_operations {
             panic!("Dimensions doesn't match. Dimensions are: [{}][{}], [{}]", matrix.get_column_len(), matrix.get_row_len(), vector.len());
         }
 
+        solution.clear();
+
         for i in 0..matrix.get_column_len() {
             solution.push(vector_operations::scalar_product(&matrix.get_matrix()[i], vector));
         }

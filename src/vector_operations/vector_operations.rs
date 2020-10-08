@@ -1,5 +1,4 @@
 pub(crate) mod vector_operations {
-
     pub fn vector_addition_subtraction(first_vector: &mut Vec<f64>, second_vector: &Vec<f64>, is_subtraction: bool) {
         if is_subtraction {
             for i in 0..first_vector.len() {
@@ -10,7 +9,6 @@ pub(crate) mod vector_operations {
                 first_vector[i] += second_vector[i];
             }
         }
-
     }
 
     pub fn euclidean_norm(vector: &Vec<f64>) -> f64 {
@@ -41,6 +39,17 @@ pub(crate) mod vector_operations {
         }
 
         return sum_of_products;
+    }
+
+    pub fn gram_schmidt(base_vector_matrix: &mut Vec<Vec<f64>>, hessenberg_matrix: &mut Vec<Vec<f64>>, iteration_count: usize) {
+        for i in 0..iteration_count {
+            //hj,k-1 = qj*qk
+            hessenberg_matrix[i][iteration_count - 1] = scalar_product(&base_vector_matrix[iteration_count], &base_vector_matrix[iteration_count]);
+            //qk = qk - hj,k-1*qj
+            vector_addition_subtraction(&mut base_vector_matrix[iteration_count],
+                                        &scalar_vector_multiplication(hessenberg_matrix[i][iteration_count - 1], &mut base_vector_matrix[i]),
+                                        true);
+        }
     }
 
     #[cfg(test)]
