@@ -44,10 +44,12 @@ pub(crate) mod vector_operations {
     pub fn gram_schmidt(base_vector_matrix: &mut Vec<Vec<f64>>, hessenberg_matrix: &mut Vec<Vec<f64>>, iteration_count: usize) {
         for i in 0..iteration_count {
             //hj,k-1 = qj*qk
-            hessenberg_matrix[i][iteration_count - 1] = scalar_product(&base_vector_matrix[iteration_count], &base_vector_matrix[iteration_count]);
+            hessenberg_matrix[i][iteration_count - 1] = scalar_product(&base_vector_matrix[i], &base_vector_matrix[iteration_count]);
             //qk = qk - hj,k-1*qj
+            let second_vector = scalar_vector_multiplication(hessenberg_matrix[i][iteration_count - 1], &mut base_vector_matrix[i]);
+
             vector_addition_subtraction(&mut base_vector_matrix[iteration_count],
-                                        &scalar_vector_multiplication(hessenberg_matrix[i][iteration_count - 1], &mut base_vector_matrix[i]),
+                                        &second_vector,
                                         true);
         }
     }
@@ -55,6 +57,7 @@ pub(crate) mod vector_operations {
     #[cfg(test)]
     mod tests {
         use super::*;
+        use assert_approx_eq::assert_approx_eq;
 
         #[test]
         fn test_vector_addition_with_two_3_times_3_vectors() {
@@ -76,6 +79,20 @@ pub(crate) mod vector_operations {
             vector_addition_subtraction(&mut first_vec, &second_vec, true);
 
             assert_eq!(first_vec, solution);
+        }
+
+        #[test]
+        fn test_projection_subtraction_with_2_times_2_vectors() {
+            let norm: f64 = 10.0;
+            let eps = 0.0001;
+
+            let mut base_vector_matrix = vec![vec![3.0 / norm.sqrt(), 1.0 / norm.sqrt()], vec![2.0, 2.0]];
+            let mut hessenberg_matrix = vec![vec![0.0; 2]; 2];
+
+            gram_schmidt(&mut base_vector_matrix, &mut hessenberg_matrix, 1);
+
+            assert_approx_eq!(base_vector_matrix[1][0], -0.4, eps);
+            assert_approx_eq!(base_vector_matrix[1][1], 1.2, eps);
         }
     }
 }
