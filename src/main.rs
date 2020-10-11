@@ -11,6 +11,4 @@ mod arnoldi_method;
 
 fn main() {
 
-    let q = vec![1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0];
-    arnoldi_method::arnoldi_method::arnoldi_method(Path::new("src/matrix_vector_operations/einheitsmatrix.txt"), &q, 10);
 }

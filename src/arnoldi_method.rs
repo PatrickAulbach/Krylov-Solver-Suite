@@ -8,6 +8,9 @@ pub(crate) mod arnoldi_method {
     //for now right hand side is an argument. TODO: Matrix object should be a general matrix object
     pub fn arnoldi_method(path: &Path, right_hand_side: &Vec<f64>, krylov_subspace_dimension: usize) -> Vec<Vec<f64>> {
         let mut qk: Vec<f64> = Vec::new();
+
+        let eps: f64 = 0.00001;
+
         let matrix_vector_struct: Matrix = matrix_vector_operations::read_matrix_from_file(path);
 
         let mut base_vector_matrix = vec![vec![0.0f64; matrix_vector_struct.get_row_len()]; krylov_subspace_dimension];
@@ -25,14 +28,12 @@ pub(crate) mod arnoldi_method {
             vector_operations::gram_schmidt(&mut base_vector_matrix, &mut hessenberg_matrix, k);
 
             hessenberg_matrix[k][k - 1] = euclidean_norm(&base_vector_matrix[k]);
+            if hessenberg_matrix[k][k-1] < 0.0 + eps && hessenberg_matrix[k][k - 1] > 0.0 - eps {
+                return hessenberg_matrix;
+            }
             base_vector_matrix[k] = vector_operations::scalar_vector_multiplication(1.0 / hessenberg_matrix[k][k - 1], &base_vector_matrix[k]);
         }
-        for i in 0..hessenberg_matrix.len() {
-            for j in 0..hessenberg_matrix[0].len() {
-                print!("{} ", hessenberg_matrix[i][j]);
-            }
-            println!();
-        }
+
         return hessenberg_matrix;
     }
 
