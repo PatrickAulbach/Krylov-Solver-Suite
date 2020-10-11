@@ -15,5 +15,5 @@ mod matrix;
 mod arnoldi_method;
 
 fn main() {
-    arnoldi_method::arnoldi_method::arnoldi_method(Path::new("src/matrix_vector_operations/unit_test_matrix_3x3.txt"), &vec![1.0, 1.0, 1.0]);
+
 }
