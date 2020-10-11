@@ -1,11 +1,9 @@
 pub (crate) mod matrix_vector_operations {
-    use std::env;
     use std::fs::File;
     use std::io::{BufRead, BufReader};
 
     use crate::vector_operations::vector_operations;
     use std::path::Path;
-    use crate::matrix;
     use crate::matrix::Matrix;
 
     pub fn matrix_vector_multiplication(matrix: &Matrix, vector: &Vec<f64>, solution: &mut Vec<f64>) {
@@ -19,16 +17,6 @@ pub (crate) mod matrix_vector_operations {
         for i in 0..matrix.get_column_len() {
             solution.push(vector_operations::scalar_product(&matrix.get_matrix()[i], vector));
         }
-    }
-
-    fn compute_residuum(matrix: &Matrix, vector: &Vec<f64>, right_hand_side: &Vec<f64>) -> f64 {
-        let mut solution: Vec<f64> = Vec::new();
-
-        matrix_vector_multiplication(&matrix, vector, &mut solution);
-
-        vector_operations::vector_addition_subtraction(&mut solution, right_hand_side, true);
-
-        return vector_operations::euclidean_norm(&solution);
     }
 
     pub fn read_matrix_from_file(path: &Path) -> Matrix {

@@ -3,7 +3,6 @@ pub(crate) mod arnoldi_method {
     use crate::matrix::Matrix;
     use crate::matrix_vector_operations::matrix_vector_operations;
     use crate::vector_operations::vector_operations;
-    use std::borrow::Borrow;
     use crate::vector_operations::vector_operations::euclidean_norm;
 
     //for now right hand side is an argument. TODO: Matrix object should be a general matrix object
@@ -11,24 +10,30 @@ pub(crate) mod arnoldi_method {
         let mut qk: Vec<f64> = Vec::new();
         let matrix_vector_struct: Matrix = matrix_vector_operations::read_matrix_from_file(path);
 
-        let mut Q = vec![vec![0.0f64; matrix_vector_struct.get_row_len()]; krylov_subspace_dimension];
+        let mut base_vector_matrix = vec![vec![0.0f64; matrix_vector_struct.get_row_len()]; krylov_subspace_dimension];
 
-        let mut H = vec![vec![0.0f64; krylov_subspace_dimension]; krylov_subspace_dimension];
+        let mut hessenberg_matrix = vec![vec![0.0f64; krylov_subspace_dimension]; krylov_subspace_dimension];
 
         //compute first vector
-        Q[0] = vector_operations::scalar_vector_multiplication((1.0 / vector_operations::euclidean_norm(right_hand_side)), right_hand_side);
+        base_vector_matrix[0] = vector_operations::scalar_vector_multiplication(1.0 / vector_operations::euclidean_norm(right_hand_side), right_hand_side);
 
         for k in 1..krylov_subspace_dimension {
-            matrix_vector_operations::matrix_vector_multiplication(&matrix_vector_struct, &Q[k - 1], &mut qk);
+            matrix_vector_operations::matrix_vector_multiplication(&matrix_vector_struct, &base_vector_matrix[k - 1], &mut qk);
 
-            Q[k] = qk.to_owned();
+            base_vector_matrix[k] = qk.to_owned();
 
-            vector_operations::gram_schmidt(&mut Q, &mut H, k);
+            vector_operations::gram_schmidt(&mut base_vector_matrix, &mut hessenberg_matrix, k);
 
-            H[k][k - 1] = euclidean_norm(&Q[k]);
-            Q[k] = vector_operations::scalar_vector_multiplication(1.0 / H[k][k - 1], &Q[k]);
+            hessenberg_matrix[k][k - 1] = euclidean_norm(&base_vector_matrix[k]);
+            base_vector_matrix[k] = vector_operations::scalar_vector_multiplication(1.0 / hessenberg_matrix[k][k - 1], &base_vector_matrix[k]);
         }
-        return H;
+        for i in 0..hessenberg_matrix.len() {
+            for j in 0..hessenberg_matrix[0].len() {
+                print!("{} ", hessenberg_matrix[i][j]);
+            }
+            println!();
+        }
+        return hessenberg_matrix;
     }
 
     #[cfg(test)]
