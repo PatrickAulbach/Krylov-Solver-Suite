@@ -5,7 +5,7 @@ pub(crate) mod arnoldi_method {
     use crate::vector_operations::vector_operations;
     use crate::vector_operations::vector_operations::euclidean_norm;
 
-    //for now right hand side is an argument. TODO: Matrix object should be a general matrix object
+    //for now right hand side is an argument. TODO: Matrix object should be a general common.matrix object
     pub fn arnoldi_method(path: &Path, right_hand_side: &Vec<f64>, krylov_subspace_dimension: usize) -> Vec<Vec<f64>> {
         let mut qk: Vec<f64> = Vec::new();
 

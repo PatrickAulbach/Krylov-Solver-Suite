@@ -1,3 +1,19 @@
+pub struct VectorOperations;
+
+impl VectorOperations {
+    pub fn vector_addition_subtraction(first_vector: &mut Vec<f64>, second_vector: &Vec<f64>, is_subtraction: bool) {
+        if is_subtraction {
+            for i in 0..first_vector.len() {
+                first_vector[i] -= second_vector[i];
+            }
+        } else {
+            for i in 0..first_vector.len() {
+                first_vector[i] += second_vector[i];
+            }
+        }
+    }
+}
+
 pub(crate) mod vector_operations {
     pub fn vector_addition_subtraction(first_vector: &mut Vec<f64>, second_vector: &Vec<f64>, is_subtraction: bool) {
         if is_subtraction {
@@ -21,7 +37,7 @@ pub(crate) mod vector_operations {
         return norm.sqrt();
     }
 
-    pub fn scalar_vector_multiplication(scalar: f64, vector: &Vec<f64>) -> Vec<f64> {
+    pub fn scalar_vector_multiplication(scalar: f64, vector: Vec<f64>) -> Vec<f64> {
         let mut vector_buff: Vec<f64> = Vec::new();
 
         for i in 0..vector.len() {
