@@ -1,19 +1,22 @@
+use crate::common::matrix::matrix::Vector;
+use num::Num;
+
 pub struct VectorOperations;
 
 impl VectorOperations {
-    pub fn vector_addition_subtraction(first_vector: &mut Vec<f64>, second_vector: &Vec<f64>, is_subtraction: bool) {
-        if is_subtraction {
-            for i in 0..first_vector.len() {
-                first_vector[i] -= second_vector[i];
-            }
+    pub fn addition<T: Num>(first_vec: Vector<T>, second_vec: Vector<T>, alpha: T, beta: T) -> Vector<T> {
+
+        if alpha == T::zero() {
+            second_vec
+        } else if beta == T::zero() {
+            first_vec
         } else {
-            for i in 0..first_vector.len() {
-                first_vector[i] += second_vector[i];
-            }
+            first_vec.add(second_vec, alpha, beta)
         }
+
     }
 }
-
+/*
 pub(crate) mod vector_operations {
     pub fn vector_addition_subtraction(first_vector: &mut Vec<f64>, second_vector: &Vec<f64>, is_subtraction: bool) {
         if is_subtraction {
@@ -112,3 +115,5 @@ pub(crate) mod vector_operations {
         }
     }
 }
+
+ */

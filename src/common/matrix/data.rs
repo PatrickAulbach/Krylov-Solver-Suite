@@ -1,12 +1,10 @@
-use std::error::Error;
-use std::fmt::{Debug, Formatter, Display, Result};
-use crate::matrix::dimensions::DimensionError;
+use crate::common::matrix::dimensions::DimensionError;
 
 pub struct Data<T> {
     data: Vec<Vec<T>>
 }
 
-impl Data<T> {
+impl<T> Data<T> {
     pub fn new(&self, data: Vec<Vec<T>>) -> Self {
         self.check_consistency().unwrap();
         Data {
@@ -22,11 +20,11 @@ impl Data<T> {
         self.data[0].len()
     }
 
-    pub fn check_consistency(&self) -> Result {
+    pub fn check_consistency(&self) -> Result<(), DimensionError> {
 
-        type DimensionError = dyn Error;
-        for column in &self.data.iter() {
-            if column != self.nrows() {
+        type Error = DimensionError;
+        for column in self.data.iter() {
+            if column.len() != self.nrows() {
                 return Err(DimensionError::InvalidDimension);
             }
         }

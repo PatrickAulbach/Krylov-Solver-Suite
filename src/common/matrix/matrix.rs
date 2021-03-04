@@ -1,28 +1,28 @@
 use super::data::Data;
-use super::dimensions::Dimensions;
 
-pub type Vector<Ncols, T> = Matrix<Ncols, Dimensions::VECTOR, T>;
+pub type Vector<T> = Matrix<T>;
 
-pub struct Matrix<Ncols, Nrows, T> {
-    data: Data<T>
+pub struct Matrix<T> {
+    data: Data<T>,
 }
 
-impl Matrix<Ncols, Nrows, T> {
+impl<T> Matrix<T> {
     pub fn new(data: Data<T>) -> Self {
         Matrix {
-            data
+             data
         }
     }
 
-    pub fn add(self, matrix: Matrix<Ncols, Nrows, T>) -> Matrix<Ncols, Nrows, T> {
+    //compute alpha * A + beta * B
+    pub fn add(self, matrix: Matrix<T>, alpha: T, beta: T) -> Matrix<T> {
         unimplemented!()
     }
 
-    pub fn Ncols(&self) -> usize {
-        self.data.Ncols()
+    pub fn ncols(&self) -> usize {
+        self.data.ncols()
     }
 
-    pub fn Nrows(&self) -> usize {
-        self.data.Nrows()
+    pub fn nrows(&self) -> usize {
+        self.data.nrows()
     }
 }

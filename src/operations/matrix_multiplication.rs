@@ -1,7 +1,6 @@
 use crate::common::matrix::matrix::{Matrix, Vector};
-use crate::common::matrix::Data;
 
-pub fn matrix_vector_multiplication(matrix: &Matrix<nrows, ncols, T>, vector: &Vector<ncols, T>) -> Vector<ncols, T>{
+pub fn matrix_vector_multiplication<T>(matrix: &Matrix<T>, vector: &Vector<T>) -> Vector<T>{
 
     unimplemented!()
 }
