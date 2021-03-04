@@ -25,4 +25,8 @@ impl<T> Matrix<T> {
     pub fn nrows(&self) -> usize {
         self.data.nrows()
     }
+
+    pub fn data(&self) -> &Data<T> {
+        &self.data
+    }
 }

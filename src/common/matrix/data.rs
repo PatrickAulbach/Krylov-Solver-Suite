@@ -20,6 +20,14 @@ impl<T> Data<T> {
         self.data[0].len()
     }
 
+    pub fn vec(&self) -> &Vec<T> {
+        &self.data[0]
+    }
+
+    pub fn matrix(&self) -> &Vec<Vec<T>> {
+        &self.data
+    }
+
     pub fn check_consistency(&self) -> Result<(), DimensionError> {
 
         type Error = DimensionError;
