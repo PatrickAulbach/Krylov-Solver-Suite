@@ -5,8 +5,7 @@ pub struct Data<T> {
 }
 
 impl<T> Data<T> {
-    pub fn new(&self, data: Vec<Vec<T>>) -> Self {
-        self.check_consistency().unwrap();
+    pub fn new(data: Vec<Vec<T>>) -> Self {
         Data {
             data
         }

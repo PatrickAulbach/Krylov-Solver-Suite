@@ -1,1 +1,1 @@
-mod file_reader;
+pub(crate) mod file_reader;
