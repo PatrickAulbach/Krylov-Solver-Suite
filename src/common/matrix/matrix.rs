@@ -1,6 +1,5 @@
 use super::data::Data;
-use std::path::Path;
-use crate::common::reader::file_reader::FileReader;
+use num::Num;
 
 pub type Vector<T> = Matrix<T>;
 
@@ -8,24 +7,15 @@ pub struct Matrix<T> {
     data: Data<T>,
 }
 
-impl<T> Matrix<T> {
+impl<T: Num> Matrix<T> {
     pub fn new(data: Data<T>) -> Self {
         Matrix {
              data
         }
     }
 
-    pub fn new_from_file(&self, path: Path) -> Self {
-
-        let data = FileReader::read_matrix_from_file(&path);
-
-        Matrix {
-            data
-        }
-    }
-
     //compute alpha * A + beta * B
-    pub fn add(self, matrix: Matrix<T>, alpha: f64, beta: f64) -> Matrix<T> {
+    pub fn add(&self, matrix: Matrix<T>, alpha: f64, beta: f64) -> Matrix<T>  {
         unimplemented!()
     }
 

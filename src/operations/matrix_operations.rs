@@ -8,10 +8,10 @@ pub struct VectorOperations<T> {
 }
 
 impl<T: Num> VectorOperations<T> {
-    pub fn addition(first_vec: Vector<T>, second_vec: Vector<T>, alpha: T, beta: T) -> Vector<T> {
-        if alpha == T::zero() {
+    pub fn addition(first_vec: Vector<T>, second_vec: Vector<T>, alpha: f64, beta: f64) -> Vector<T> {
+        if alpha == 0 as f64 {
             second_vec
-        } else if beta == T::zero() {
+        } else if beta == 0 as f64 {
             first_vec
         } else {
             first_vec.add(second_vec, alpha, beta)
