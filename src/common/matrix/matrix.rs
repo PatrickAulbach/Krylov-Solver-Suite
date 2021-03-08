@@ -1,39 +1,17 @@
 use num::Num;
 use std::ops::{Mul, Add};
 use crate::common::matrix::dimensions::DimensionError;
-use std::str::FromStr;
-use std::fmt::Debug;
 
 pub type Vector<T> = Matrix<T>;
 
-pub struct Matrix<T: Num + FromStr + Copy> {
-    data: Vec<Vec<T>>,
+pub struct Matrix<T> {
+    pub(crate) data: Vec<Vec<T>>,
 }
 
-impl<T: Num> Matrix<T> where T: Mul<Output = T> + Add<Output = T>, T: FromStr + Copy {
+impl<T: Num> Matrix<T> where T: Mul<Output = T> + Add<Output = T> {
     pub fn new(data: Vec<Vec<T>>) -> Self {
         Matrix {
              data
-        }
-    }
-
-    //compute alpha * A + beta * B
-    pub fn add(self, matrix: Matrix<T>, alpha: T, beta: T) -> Matrix<T> where <T as FromStr>::Err: Debug {
-
-        if alpha == T::zero() && beta == T::one() {
-            matrix
-        } else if beta == T::zero() && alpha == T::one() {
-            self
-        } else {
-            let mut data: Vec<Vec<T>> = Vec::new();
-            for i in 0..self.ncols() {
-                let mut column_vec: Vec<T> = Vec::new();
-                for j in 0..self.nrows() {
-                    column_vec.push(self.data[i][j] * alpha + matrix.data[i][j] * beta);
-                }
-                data.push(column_vec);
-            }
-            Matrix::new(data)
         }
     }
 
@@ -65,8 +43,7 @@ impl<T: Num> Matrix<T> where T: Mul<Output = T> + Add<Output = T>, T: FromStr + 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::common::reader::file_reader::FileReader;
-    use std::path::Path;
+    use crate::operations::matrix_operations::MatrixOperations;
 
     #[test]
     fn add_with_alpha_zero_should_return_b() {
@@ -85,7 +62,7 @@ mod tests {
             ]
         );
 
-        let added_matrix: Matrix<f64> = first_matrix.add(second_matrix, 0f64, 1f64);
+        let added_matrix: Matrix<f64> = MatrixOperations::add(first_matrix, second_matrix, 0f64, 1f64);
 
         assert_eq!(added_matrix.data[0], vec![1.0, 1.0, 1.0]);
         assert_eq!(added_matrix.data[1], vec![1.0, 1.0, 1.0]);
@@ -109,7 +86,7 @@ mod tests {
             ]
         );
 
-        let added_matrix: Matrix<f64> = first_matrix.add(second_matrix, 0f64, 2f64);
+        let added_matrix: Matrix<f64> = MatrixOperations::add(first_matrix, second_matrix, 0f64, 2f64);
 
         assert_eq!(added_matrix.data[0], vec![2.0, 4.0, 6.0]);
         assert_eq!(added_matrix.data[1], vec![8.0, 10.0, 12.0]);

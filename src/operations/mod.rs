@@ -1,3 +1,3 @@
 mod matrix_multiplication;
-mod matrix_operations;
+pub mod matrix_operations;
 

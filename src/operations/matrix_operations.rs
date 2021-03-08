@@ -1,36 +1,45 @@
-use crate::common::matrix::matrix::Vector;
+use crate::common::matrix::matrix::{Vector, Matrix};
 use num::Num;
-use std::ops::{Mul, Div, Sub, Add, Neg};
+use std::ops::{Mul, Add};
 use std::marker::PhantomData;
 use std::str::FromStr;
-use std::fmt::Debug;
 
-pub struct VectorOperations<T> { 
-    _phantom_data: PhantomData<T>
+pub struct MatrixOperations<T> {
+    phantom_data: PhantomData<T>
 }
 
-impl<'a, T: 'a + Num> VectorOperations<T> where &'a T: Mul<Output = &'a T> + Add<Output = &'a T>, T: FromStr + Copy {
-    pub fn addition(first_vec: Vector<T>, second_vec: Vector<T>, alpha: T, beta: T) -> Vector<T> where <T as FromStr>::Err: Debug {
-        if alpha == T::zero() {
-            second_vec
-        } else if beta == T::zero() {
-            first_vec
+impl<T> MatrixOperations<T> where T: Mul<Output = T> + Add<Output = T>, T: FromStr + Copy + Num {
+    //compute alpha * A + beta * B
+    pub fn add(a: Matrix<T>, b: Matrix<T>, alpha: T, beta: T) -> Matrix<T> {
+        if alpha == T::zero() && beta == T::one() {
+            b
+        } else if beta == T::zero() && alpha == T::one() {
+            a
         } else {
-            first_vec.add(second_vec, alpha, beta)
+            let mut data: Vec<Vec<T>> = Vec::new();
+            for i in 0..a.ncols() {
+                let mut column_vec: Vec<T> = Vec::new();
+                for j in 0..a.nrows() {
+                    column_vec.push(a.data[i][j] * alpha + b.data[i][j] * beta);
+                }
+                data.push(column_vec);
+            }
+            Matrix::new(data)
         }
     }
-    /*
-    pub fn euclidean_norm<'a>(vector: &Vector<T>) -> T where T: Num + std::ops::Mul<Output = &'a T> {
+}
+
+impl<'a, T: 'a> MatrixOperations<T> where &'a T: Mul<Output = &'a T> + Add<Output = &'a T> + FromStr + Copy + Num, T: std::ops::AddAssign + Num + Copy {
+
+    pub fn euclidean_norm(vector: &Vector<T>) -> T {
         let mut norm = T::zero();
 
         for i in 0..vector.ncols() {
-            norm.into() += &vector.data().vec()[i].into() * &vector.data().vec()[i].into();
+            norm += vector.data[i][0] * vector.data[i][0];
         }
 
-        return norm;
+        norm
     }
-
-     */
 }
 
 /*
