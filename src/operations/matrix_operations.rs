@@ -20,7 +20,7 @@ impl<T> MatrixOperations<T> where T: Mul<Output = T> + Add<Output = T>, T: FromS
             for i in 0..a.ncols() {
                 let mut column_vec: Vec<T> = Vec::new();
                 for j in 0..a.nrows() {
-                    column_vec.push(a.data[i][j] * alpha + b.data[i][j] * beta);
+                    column_vec.push(a.data()[i][j] * alpha + b.data()[i][j] * beta);
                 }
                 data.push(column_vec);
             }
@@ -35,7 +35,7 @@ impl<'a, T: 'a> MatrixOperations<T> where &'a T: Mul<Output = &'a T> + Add<Outpu
         let mut norm = T::zero();
 
         for i in 0..vector.ncols() {
-            norm += vector.data[i][0] * vector.data[i][0];
+            norm += vector.data()[i][0] * vector.data()[i][0];
         }
 
         norm

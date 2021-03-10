@@ -4,8 +4,9 @@ use crate::common::matrix::dimensions::DimensionError;
 
 pub type Vector<T> = Matrix<T>;
 
+#[derive(Clone)]
 pub struct Matrix<T> {
-    pub(crate) data: Vec<Vec<T>>,
+    data: Vec<Vec<T>>,
 }
 
 impl<T: Num> Matrix<T> where T: Mul<Output = T> + Add<Output = T> {
