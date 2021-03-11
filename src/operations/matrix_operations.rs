@@ -38,6 +38,13 @@ impl<T> MatrixOperations<T> where T: Mul<Output = T> + Add<Output = T>, T: FromS
 
         norm.sqrt()
     }
+
+    pub fn gram_schmidt(mut v: Vector<T>, q: Matrix<T>, h: Matrix<T>, k: usize) -> Vector<T>{
+        for i in 0..q.ncols() {
+
+        }
+        unimplemented!()
+    }
 }
 
 #[cfg(test)]
@@ -108,27 +115,3 @@ mod tests {
     }
 
 }
-
-/*
-pub(crate) mod vector_operations {
-
-
-
-
-    pub fn gram_schmidt(base_vector_matrix: &mut Vec<Vec<f64>>, hessenberg_matrix: &mut Vec<Vec<f64>>, iteration_count: usize) {
-        for i in 0..iteration_count {
-            //hj,k-1 = qj*qk
-            hessenberg_matrix[i][iteration_count - 1] = scalar_product(&base_vector_matrix[i], &base_vector_matrix[iteration_count]);
-            //qk = qk - hj,k-1*qj
-            let second_vector = scalar_vector_multiplication(hessenberg_matrix[i][iteration_count - 1], &mut base_vector_matrix[i]);
-
-            vector_addition_subtraction(&mut base_vector_matrix[iteration_count],
-                                        &second_vector,
-                                        true);
-        }
-    }
-
-
-}
-
- */
