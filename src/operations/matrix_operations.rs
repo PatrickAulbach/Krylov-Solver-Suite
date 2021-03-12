@@ -1,6 +1,6 @@
 use crate::common::matrix::matrix::{Vector, Matrix};
 use num::Num;
-use std::ops::{Mul, Add, AddAssign};
+use std::ops::{Mul, Add, AddAssign, Neg};
 use std::marker::PhantomData;
 use std::str::FromStr;
 use crate::common::matrix::square_root::Sqrt;
@@ -9,7 +9,7 @@ pub struct MatrixOperations<T> {
     phantom_data: PhantomData<T>
 }
 
-impl<T> MatrixOperations<T> where T: Mul<Output = T> + Add<Output = T>, T: FromStr + Copy + Num + AddAssign + Sqrt {
+impl<T> MatrixOperations<T> where T: Mul<Output = T> + Add<Output = T>, T: FromStr + Copy + Num + AddAssign {
     //compute alpha * A + beta * B
     pub fn add(a: Matrix<T>, b: Matrix<T>, alpha: T, beta: T) -> Matrix<T> {
         if alpha == T::zero() && beta == T::one() {
@@ -29,7 +29,7 @@ impl<T> MatrixOperations<T> where T: Mul<Output = T> + Add<Output = T>, T: FromS
         }
     }
 
-    pub fn euclidean_norm(vector: Vector<T>) -> T {
+    pub fn euclidean_norm(vector: Vector<T>) -> T where T: Sqrt {
         let mut norm = T::zero();
 
         for i in 0..vector.nrows() {
@@ -39,11 +39,22 @@ impl<T> MatrixOperations<T> where T: Mul<Output = T> + Add<Output = T>, T: FromS
         norm.sqrt()
     }
 
-    pub fn gram_schmidt(mut v: Vector<T>, q: Matrix<T>, h: Matrix<T>, k: usize) -> Vector<T>{
-        for i in 0..q.ncols() {
+    /*
+    @TODO: need a proper gram schmidt in the future because q will surely
+           lose orthogonality when n is big
+    @TODO: proper method naming
+    @TODO: tests for v in R^n where n is big (need a good example) small n should do the trick for now
+    */
+    pub fn gram_schmidt(mut v: Vector<T>, q: Matrix<T>, h: Matrix<T>, k: usize) -> Vector<T>
+        where T: Neg<Output = T> {
 
+        for i in 0..q.ncols() {
+            let q_vec = Vector::new(vec![q.data()[i].clone()]);
+            v = MatrixOperations::add(v, q_vec, T::one(), -h.data()[i][k]);
         }
-        unimplemented!()
+
+        let v = v; // remove mut
+        v
     }
 }
 
