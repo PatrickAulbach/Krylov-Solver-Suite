@@ -1,9 +1,12 @@
 use num::Num;
+use crate::krylov_subspace_methods::krylov_essentials::Krylov;
+use std::path::Path;
+use crate::common::matrix::matrix::Matrix;
 
 pub struct ArnoldiMethod;
 
-impl ArnoldiMethod {
-    pub fn run<T: Num>() -> Vec<Vec<T>> {
+impl<T> Krylov<T> for ArnoldiMethod {
+    fn new(path: &Path) -> Matrix<T> {
         unimplemented!()
     }
 }
