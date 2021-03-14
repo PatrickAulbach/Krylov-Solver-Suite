@@ -4,7 +4,7 @@ use std::ops::{Mul, Add, AddAssign, Neg};
 use std::marker::PhantomData;
 use std::str::FromStr;
 use crate::common::matrix::square_root::Sqrt;
-use crate::common::matrix::dimensions::DimensionError;
+use crate::common::matrix::dimensions::{DimensionError, Dimensions};
 
 pub struct MatrixOperations<T> {
     phantom_data: PhantomData<T>
@@ -41,7 +41,6 @@ impl<T> MatrixOperations<T> where T: Mul<Output=T> + Add<Output=T>, T: FromStr +
     }
 
     pub fn mul(a: Matrix<T>, b: Matrix<T>) -> Result<Matrix<T>, DimensionError> {
-
         type Error = DimensionError;
         if a.nrows() != b.ncols() {
             return Err(DimensionError::InvalidDimension);
@@ -62,6 +61,25 @@ impl<T> MatrixOperations<T> where T: Mul<Output=T> + Add<Output=T>, T: FromStr +
 
         let data = data;
         Ok(Matrix::new(data))
+    }
+
+    pub fn dot(a: Vector<T>, b: Vector<T>) -> Result<T, DimensionError> {
+
+        if a.nrows() != 1 ||
+            b.nrows() != 1 ||
+            a.ncols() != b.ncols() {
+            return Err(DimensionError::InvalidDimension);
+        }
+
+        let mut dot = T::zero();
+
+        for i in 0..a.ncols() {
+            dot += a.data()[i][0] * b.data()[i][0];
+        }
+
+        let dot = dot;
+
+        Ok(dot)
     }
 }
 
@@ -154,5 +172,31 @@ mod tests {
         assert_eq!(added_matrix.data()[0], vec![12.0, 12.0, 12.0]);
         assert_eq!(added_matrix.data()[1], vec![15.0, 15.0, 15.0]);
         assert_eq!(added_matrix.data()[2], vec![18.0, 18.0, 18.0]);
+    }
+
+    #[test]
+    fn test_dot_product_with_vectors() {
+        let a: Vector<f64> = Vector::new(
+            vec![
+                vec![1.0],
+                vec![2.0],
+                vec![3.0],
+                vec![4.0],
+                vec![5.0],
+            ]
+        );
+        let b: Vector<f64> = Vector::new(
+            vec![
+                vec![1.0],
+                vec![1.0],
+                vec![1.0],
+                vec![1.0],
+                vec![1.0],
+            ]
+        );
+
+        let dot: f64 = MatrixOperations::dot(a, b).unwrap();
+
+        assert_eq!(dot, 15f64);
     }
 }
