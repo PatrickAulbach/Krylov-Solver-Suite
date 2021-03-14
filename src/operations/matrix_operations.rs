@@ -4,6 +4,7 @@ use std::ops::{Mul, Add, AddAssign, Neg};
 use std::marker::PhantomData;
 use std::str::FromStr;
 use crate::common::matrix::square_root::Sqrt;
+use crate::common::matrix::dimensions::DimensionError;
 
 pub struct MatrixOperations<T> {
     phantom_data: PhantomData<T>
@@ -39,8 +40,12 @@ impl<T> MatrixOperations<T> where T: Mul<Output=T> + Add<Output=T>, T: FromStr +
         norm.sqrt()
     }
 
-    pub fn mul(a: Matrix<T>, b: Matrix<T>) -> Matrix<T> {
+    pub fn mul(a: Matrix<T>, b: Matrix<T>) -> Result<Matrix<T>, DimensionError> {
 
+        type Error = DimensionError;
+        if a.nrows() != b.ncols() {
+            return Err(DimensionError::InvalidDimension);
+        }
         let mut data: Vec<Vec<T>> = Vec::new();
 
         for k in 0..b.ncols() {
@@ -56,7 +61,7 @@ impl<T> MatrixOperations<T> where T: Mul<Output=T> + Add<Output=T>, T: FromStr +
         }
 
         let data = data;
-        Matrix::new(data)
+        Ok(Matrix::new(data))
     }
 }
 
@@ -144,7 +149,7 @@ mod tests {
             ]
         );
 
-        let added_matrix: Matrix<f64> = MatrixOperations::mul(first_matrix, second_matrix);
+        let added_matrix: Matrix<f64> = MatrixOperations::mul(first_matrix, second_matrix).unwrap();
 
         assert_eq!(added_matrix.data()[0], vec![12.0, 12.0, 12.0]);
         assert_eq!(added_matrix.data()[1], vec![15.0, 15.0, 15.0]);
