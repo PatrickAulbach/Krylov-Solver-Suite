@@ -39,16 +39,18 @@ impl<T> MatrixOperations<T> where T: Mul<Output=T> + Add<Output=T>, T: FromStr +
         norm.sqrt()
     }
 
-    pub fn matrix_matrix_multiplication(matrix: Matrix<T>, vector: Matrix<T>) -> Matrix<T> {
+    pub fn mul(a: Matrix<T>, b: Matrix<T>) -> Matrix<T> {
 
         let mut data: Vec<Vec<T>> = Vec::new();
 
-        for k in 0..vector.ncols() {
+        for k in 0..b.ncols() {
             let mut column_vec: Vec<T> = Vec::new();
-            for i in 0..matrix.ncols() {
-                for j in 0..matrix.nrows() {
-                    column_vec.push(matrix.data()[i][j] * vector.data()[j][k]);
+            for i in 0..a.nrows() {
+                let mut scalar = T::zero();
+                for j in 0..a.ncols() {
+                    scalar += a.data()[i][j] * b.data()[j][k];
                 }
+                column_vec.push(scalar);
             }
             data.push(column_vec);
         }
@@ -123,5 +125,29 @@ mod tests {
         let norm = MatrixOperations::euclidean_norm(vector);
 
         assert_approx_eq!(3.74165738677, norm, 1e-3f64);
+    }
+
+    #[test]
+    fn test_matrix_matrix_multiplication_with_3x3_matrices() {
+        let first_matrix: Matrix<f64> = Matrix::new(
+            vec![
+                vec![1.0, 1.0, 1.0],
+                vec![1.0, 1.0, 1.0],
+                vec![1.0, 1.0, 1.0]
+            ]
+        );
+        let second_matrix: Matrix<f64> = Matrix::new(
+            vec![
+                vec![1.0, 2.0, 3.0],
+                vec![4.0, 5.0, 6.0],
+                vec![7.0, 8.0, 9.0]
+            ]
+        );
+
+        let added_matrix: Matrix<f64> = MatrixOperations::mul(first_matrix, second_matrix);
+
+        assert_eq!(added_matrix.data()[0], vec![12.0, 12.0, 12.0]);
+        assert_eq!(added_matrix.data()[1], vec![15.0, 15.0, 15.0]);
+        assert_eq!(added_matrix.data()[2], vec![18.0, 18.0, 18.0]);
     }
 }
