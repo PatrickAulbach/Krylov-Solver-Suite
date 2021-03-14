@@ -9,7 +9,7 @@ pub struct MatrixOperations<T> {
     phantom_data: PhantomData<T>
 }
 
-impl<T> MatrixOperations<T> where T: Mul<Output = T> + Add<Output = T>, T: FromStr + Copy + Num + AddAssign {
+impl<T> MatrixOperations<T> where T: Mul<Output=T> + Add<Output=T>, T: FromStr + Copy + Num + AddAssign {
     //compute alpha * A + beta * B
     pub fn add(a: Matrix<T>, b: Matrix<T>, alpha: T, beta: T) -> Matrix<T> {
         if alpha == T::zero() && beta == T::one() {
@@ -37,6 +37,24 @@ impl<T> MatrixOperations<T> where T: Mul<Output = T> + Add<Output = T>, T: FromS
         }
 
         norm.sqrt()
+    }
+
+    pub fn matrix_matrix_multiplication(matrix: Matrix<T>, vector: Matrix<T>) -> Matrix<T> {
+
+        let mut data: Vec<Vec<T>> = Vec::new();
+
+        for k in 0..vector.ncols() {
+            let mut column_vec: Vec<T> = Vec::new();
+            for i in 0..matrix.ncols() {
+                for j in 0..matrix.nrows() {
+                    column_vec.push(matrix.data()[i][j] * vector.data()[j][k]);
+                }
+            }
+            data.push(column_vec);
+        }
+
+        let data = data;
+        Matrix::new(data)
     }
 }
 
@@ -106,5 +124,4 @@ mod tests {
 
         assert_approx_eq!(3.74165738677, norm, 1e-3f64);
     }
-
 }
