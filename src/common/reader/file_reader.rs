@@ -10,16 +10,16 @@ pub struct FileReader<T> {
 }
 
 impl<T> FileReader<T> where T: Num + FromStr {
-    pub fn read_matrix_from_file(path: &Path) -> Vec<Vec<T>> where <T as FromStr>::Err: Debug {
+    pub fn read_matrix_from_file(path: &Path) -> &Vec<T> where <T as FromStr>::Err: Debug {
         let file = BufReader::new(File::open(path).unwrap());
 
-        let data: Vec<Vec<T>> = file.lines()
+        let data: Vec<T> = file.lines()
             .map(|f| f.unwrap().split(char::is_whitespace)
                 .map(|number| number.parse().unwrap())
                 .collect())
             .collect();
 
-        data
+        &data
     }
 }
 
@@ -29,16 +29,16 @@ mod tests {
 
     #[test]
     fn data_struct_should_have_f64_as_data_type() {
-        let data: Vec<Vec<f64>> = FileReader::read_matrix_from_file(Path::new("src/common/reader/test.txt"));
+        let data: &Vec<f64> = FileReader::read_matrix_from_file(Path::new("src/common/reader/test.txt"));
 
-        assert_eq!(1f64, data[0][0]);
+        assert_eq!(1f64, data[0]);
     }
 
     #[test]
     fn data_struct_should_have_f32_as_data_type() {
-        let data: Vec<Vec<f32>> = FileReader::read_matrix_from_file(Path::new("src/common/reader/test.txt"));
+        let data: &Vec<f32> = FileReader::read_matrix_from_file(Path::new("src/common/reader/test.txt"));
 
-        assert_eq!(1f32, data[0][0]);
+        assert_eq!(1f32, data[0]);
     }
 }
 

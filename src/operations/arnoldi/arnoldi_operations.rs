@@ -9,13 +9,13 @@ pub struct ArnoldiOperations<T> {
     phantom_data: PhantomData<T>
 }
 
-impl<T> ArnoldiOperations<T> where T: Mul<Output = T> + Add<Output = T>, T: FromStr + Copy + Num + AddAssign {
-    pub fn arnoldi_orthogonalization(mut v: Vector<T>, q: Matrix<T>, h: Matrix<T>, k: usize) -> Vector<T>
+impl<'a, T> ArnoldiOperations<T> where T: Mul<Output = T> + Add<Output = T>, T: FromStr + Copy + Num + AddAssign {
+    pub fn arnoldi_orthogonalization(mut v: Vector<'a, T>, q: Matrix<'a, T>, h: Matrix<'a, T>, k: usize) -> Vector<'a, T>
         where T: Neg<Output = T> {
 
         for i in 0..q.ncols() {
-            let q_vec = Vector::new(vec![q.data()[i].clone()]);
-            v = MatrixOperations::add(v, q_vec, T::one(), -h.data()[i][k]);
+            let q_vec = Vector::new(&vec![q.data()[i].clone()], q.nrows(), 1);
+            v = MatrixOperations::add(v, q_vec, T::one(), -h.data()[i]);
         }
 
         let v = v; // remove mut

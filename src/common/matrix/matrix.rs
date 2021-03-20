@@ -6,14 +6,14 @@ pub type Vector<'a, T> = Matrix<'a, T>;
 
 #[derive(Clone)]
 pub struct Matrix<'a, T> {
-    data: &'a [T],
+    data: &'a Vec<T>,
     ncols: usize,
     nrows: usize,
-    rhs: Option<&'a [T]>,
+    rhs: Option<&'a Vec<T>>,
 }
 
-impl<T: Num> Matrix<T> where T: Mul<Output = T> + Add<Output = T> {
-    pub fn new(data: &[T], ncols: usize, nrows: usize) -> Self {
+impl<'a, T: Num> Matrix<'a, T> where T: Mul<Output = T> + Add<Output = T> {
+    pub fn new(data: &'a Vec<T>, ncols: usize, nrows: usize) -> Self {
         Matrix {
             data,
             ncols,
@@ -25,7 +25,7 @@ impl<T: Num> Matrix<T> where T: Mul<Output = T> + Add<Output = T> {
     pub fn check_consistency(&self) -> Result<(), DimensionError> {
 
         type Error = DimensionError;
-        if self.ncols * self.nrows {
+        if self.ncols * self.nrows != self.data.len() {
             return Err(DimensionError::InvalidDimension);
         }
 
@@ -40,7 +40,7 @@ impl<T: Num> Matrix<T> where T: Mul<Output = T> + Add<Output = T> {
         self.nrows()
     }
 
-    pub fn data(&self) -> &[T] {
+    pub fn data(&self) -> &Vec<T> {
         &self.data
     }
 
