@@ -2,18 +2,18 @@ use num::Num;
 use std::ops::{Mul, Add};
 use crate::common::matrix::dimensions::DimensionError;
 
-pub type Vector<'a, T> = Matrix<'a, T>;
+pub type Vector<T> = Matrix<T>;
 
 #[derive(Clone)]
-pub struct Matrix<'a, T> {
-    data: &'a Vec<T>,
+pub struct Matrix<T> {
+    data: Vec<T>,
     ncols: usize,
     nrows: usize,
-    rhs: Option<&'a Vec<T>>,
+    rhs: Option<Vec<T>>,
 }
 
-impl<'a, T: Num> Matrix<'a, T> where T: Mul<Output = T> + Add<Output = T> {
-    pub fn new(data: &'a Vec<T>, ncols: usize, nrows: usize) -> Self {
+impl<T: Num> Matrix<T> where T: Mul<Output = T> + Add<Output = T> {
+    pub fn new(data: Vec<T>, ncols: usize, nrows: usize) -> Self {
         Matrix {
             data,
             ncols,

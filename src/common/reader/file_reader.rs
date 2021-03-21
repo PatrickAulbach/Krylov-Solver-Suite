@@ -13,13 +13,7 @@ impl<T> FileReader<T> where T: Num + FromStr {
     pub fn read_matrix_from_file(path: &Path) -> &Vec<T> where <T as FromStr>::Err: Debug {
         let file = BufReader::new(File::open(path).unwrap());
 
-        let data: Vec<T> = file.lines()
-            .map(|f| f.unwrap().split(char::is_whitespace)
-                .map(|number| number.parse().unwrap())
-                .collect())
-            .collect();
-
-        &data
+        unimplemented!()
     }
 }
 
