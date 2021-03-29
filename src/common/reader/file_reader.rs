@@ -16,7 +16,7 @@ impl<T> FileReader<T> where T: Num + FromStr {
         unimplemented!()
     }
 }
-
+/*
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -35,4 +35,6 @@ mod tests {
         assert_eq!(1f32, data[0]);
     }
 }
+
+ */
 

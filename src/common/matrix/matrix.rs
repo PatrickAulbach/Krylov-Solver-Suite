@@ -33,11 +33,11 @@ impl<T: Num> Matrix<T> where T: Mul<Output = T> + Add<Output = T> {
     }
 
     pub fn ncols(&self) -> usize {
-        self.ncols()
+        self.ncols
     }
 
     pub fn nrows(&self) -> usize {
-        self.nrows()
+        self.nrows
     }
 
     pub fn data(&self) -> &Vec<T> {
