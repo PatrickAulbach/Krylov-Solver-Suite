@@ -45,16 +45,19 @@ impl<T> MatrixOperations<T> where T: Mul<Output=T> + Add<Output=T>, T: FromStr +
         let mut data: Vec<T> = Vec::new();
         let mut buf: T = T::zero();
 
-        for k in 0..a.nrows() {
-            for i in 0..a.data().len() {
-                unimplemented!()
+        for i in 0..a.nrows() {
+            for j in 0..b.ncols() {
+                buf = T::zero();
+                for k in 0..a.ncols() {
+                    buf += a.data()[i * a.ncols() + k] * b.data()[k * b.ncols() + j];
+                }
+                data.push(buf);
             }
         }
 
         let data = data;
 
-        //Ok(Matrix::new(&data, 0, 0));
-        unimplemented!()
+        Ok(Matrix::new(data, a.ncols(), b.nrows()))
     }
 
     pub fn dot(a: Vector<T>, b: Vector<T>) -> Result<T, DimensionError> {
@@ -152,7 +155,6 @@ mod tests {
         assert_approx_eq!(3.74165738677, norm, 1e-3f64);
     }
 
-    #[ignore]
     #[test]
     fn test_matrix_matrix_multiplication_with_3x3_matrices() {
         let first_matrix: Matrix<f64> = Matrix::new(
@@ -174,9 +176,9 @@ mod tests {
             3
         );
 
-        let added_matrix: Matrix<f64> = MatrixOperations::mul(first_matrix, second_matrix).unwrap();
+        let multiplicated_matrix: Matrix<f64> = MatrixOperations::mul(first_matrix, second_matrix).unwrap();
 
-        assert_eq!(added_matrix.data(), &vec![12.0, 12.0, 12.0, 15.0, 15.0, 15.0, 18.0, 18.0, 18.0]);
+        assert_eq!(multiplicated_matrix.data(), &vec![12.0, 15.0, 18.0, 12.0, 15.0, 18.0, 12.0, 15.0, 18.0]);
     }
     #[ignore]
     #[test]
