@@ -1,4 +1,3 @@
-use num::Num;
 use crate::krylov_subspace_methods::krylov_essentials::Krylov;
 use std::path::Path;
 use crate::common::matrix::matrix::Matrix;

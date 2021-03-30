@@ -1,5 +1,5 @@
 use std::path::Path;
-use std::io::{BufReader, BufRead};
+use std::io::{BufReader};
 use std::fs::File;
 use num::Num;
 use std::str::FromStr;

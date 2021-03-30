@@ -1,10 +1,10 @@
 use crate::common::matrix::matrix::{Vector, Matrix};
 use num::Num;
-use std::ops::{Mul, Add, AddAssign, Neg};
+use std::ops::{Mul, Add, AddAssign};
 use std::marker::PhantomData;
 use std::str::FromStr;
 use crate::common::matrix::square_root::Sqrt;
-use crate::common::matrix::dimensions::{DimensionError, Dimensions};
+use crate::common::matrix::dimensions::DimensionError;
 
 pub struct MatrixOperations<T> {
     phantom_data: PhantomData<T>
@@ -75,8 +75,7 @@ impl<T> MatrixOperations<T> where T: Mul<Output=T> + Add<Output=T>, T: FromStr +
 
         let dot = dot;
 
-        //Ok(dot);
-        unimplemented!()
+        Ok(dot)
     }
 }
 
@@ -180,18 +179,18 @@ mod tests {
 
         assert_eq!(multiplicated_matrix.data(), &vec![12.0, 15.0, 18.0, 12.0, 15.0, 18.0, 12.0, 15.0, 18.0]);
     }
-    #[ignore]
+
     #[test]
     fn test_dot_product_with_vectors() {
         let a: Vector<f64> = Vector::new(
             vec![1f64, 2f64, 3f64, 4f64, 5f64],
-            1,
-            5
+            5,
+            1
         );
         let b: Vector<f64> = Vector::new(
-            vec![1f64, 2f64, 3f64, 4f64, 5f64],
-            1,
-            5
+            vec![1f64, 1f64, 1f64, 1f64, 1f64],
+            5,
+            1
         );
 
         let dot: f64 = MatrixOperations::dot(a, b).unwrap();
