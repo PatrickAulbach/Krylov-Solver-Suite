@@ -5,7 +5,7 @@ use crate::common::matrix::matrix::Vector;
 pub struct Kaczmarz;
 
 impl<T> Krylov<T> for Kaczmarz {
-    fn new(path: &Path) -> Vector<T> {
+    fn new(_path: &Path) -> Vector<T> {
         unimplemented!()
     }
 }

@@ -5,7 +5,7 @@ use crate::common::matrix::matrix::Matrix;
 pub struct ArnoldiMethod;
 
 impl<T> Krylov<T> for ArnoldiMethod {
-    fn new(path: &Path) -> Matrix<T> {
+    fn new(_path: &Path) -> Matrix<T> {
         unimplemented!()
     }
 }

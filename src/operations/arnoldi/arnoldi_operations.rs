@@ -10,7 +10,7 @@ pub struct ArnoldiOperations<T> {
 }
 
 impl<'a, T> ArnoldiOperations<T> where T: Mul<Output = T> + Add<Output = T>, T: FromStr + Copy + Num + AddAssign {
-    pub fn arnoldi_orthogonalization(mut v: Vector<T>, q: Matrix<T>, h: Matrix<T>, k: usize) -> Vector<T>
+    pub fn arnoldi_orthogonalization(mut v: Vector<T>, q: Matrix<T>, h: Matrix<T>, _k: usize) -> Vector<T>
         where T: Neg<Output = T> {
 
         for i in 0..q.ncols() {

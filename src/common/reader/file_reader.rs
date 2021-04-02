@@ -1,10 +1,8 @@
 use std::path::Path;
-use std::io::{BufReader, BufRead, ErrorKind};
+use std::io::{BufReader, BufRead};
 use std::fs::File;
 use num::Num;
 use std::str::FromStr;
-use std::fmt::{Debug};
-use std::io::Error;
 
 pub struct FileReader<T> {
     data_type: T

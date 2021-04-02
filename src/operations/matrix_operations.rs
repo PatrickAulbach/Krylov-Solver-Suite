@@ -17,7 +17,6 @@ impl<T> MatrixOperations<T> where T: Mul<Output=T> + Add<Output=T>, T: FromStr +
         } else if beta == T::zero() && alpha == T::one() {
             a
         } else {
-            let test = a.nrows() * a.ncols();
             let mut data: Vec<T> = Vec::new();
             for i in 0..a.data().len() {
                 data.push(a.data()[i] * alpha + b.data()[i] * beta);
@@ -43,7 +42,7 @@ impl<T> MatrixOperations<T> where T: Mul<Output=T> + Add<Output=T>, T: FromStr +
         }
 
         let mut data: Vec<T> = Vec::new();
-        let mut buf: T = T::zero();
+        let mut buf: T;
 
         for i in 0..a.nrows() {
             for j in 0..b.ncols() {
