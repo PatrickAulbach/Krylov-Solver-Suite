@@ -19,7 +19,6 @@ impl<T> FileReader<T> where T: Num + FromStr {
             let mut l: Vec<T> = line.unwrap().trim().split(char::is_whitespace).flat_map(str::parse::<T>).collect();
             arr.append(&mut l)
         }
-
         arr
     }
 }
@@ -32,14 +31,14 @@ mod tests {
     fn data_struct_should_have_f64_as_data_type() {
         let data: Vec<f64> = FileReader::read_matrix_from_file(Path::new("src/common/reader/test.txt"));
 
-        assert_eq!(1f64, data[0]);
+        assert_eq!(vec![1.0, 2.0, 3.0, 3.0, 2.0, 1.0, 0.0, -10.0, -15.514], data);
     }
 
     #[test]
     fn data_struct_should_have_f32_as_data_type() {
         let data: Vec<f32> = FileReader::read_matrix_from_file(Path::new("src/common/reader/test.txt"));
 
-        assert_eq!(1f32, data[0]);
+        assert_eq!(vec![1.0, 2.0, 3.0, 3.0, 2.0, 1.0, 0.0, -10.0, -15.514], data);
     }
 }
 
