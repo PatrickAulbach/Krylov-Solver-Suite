@@ -18,7 +18,7 @@ impl<'a, T> ArnoldiOperations<T> where T: Mul<Output = T> + Add<Output = T>, T: 
             v = MatrixOperations::add(v, q_vec, T::one(), -h.data()[i]);
         }
 
-        let v = v; // remove mut
+        let v = v;
         v
     }
 }

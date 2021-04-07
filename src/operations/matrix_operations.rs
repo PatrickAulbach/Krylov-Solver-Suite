@@ -21,7 +21,9 @@ impl<T> MatrixOperations<T> where T: Mul<Output=T> + Add<Output=T>, T: FromStr +
             for i in 0..a.data().len() {
                 data.push(a.data()[i] * alpha + b.data()[i] * beta);
             }
-            Matrix::new(data, a.nrows(), b.nrows())
+            dbg!(a.nrows(), a.ncols());
+            dbg!(b.nrows(), b.ncols());
+            Matrix::new(data, a.ncols(), a.nrows())
         }
     }
 
