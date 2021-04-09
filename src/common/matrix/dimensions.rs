@@ -6,7 +6,8 @@ pub enum Dimensions {
 }
 
 pub enum DimensionError {
-    InvalidDimension
+    InvalidDimension,
+    MatrixOpsError
 }
 
 impl Error for DimensionError {
@@ -16,7 +17,8 @@ impl Error for DimensionError {
 impl DimensionError {
     pub fn message(&self) -> &str {
         match self {
-            DimensionError::InvalidDimension => "Invalid Dimension"
+            DimensionError::InvalidDimension => "Invalid Dimension",
+            DimensionError::MatrixOpsError => ""
         }
     }
 }

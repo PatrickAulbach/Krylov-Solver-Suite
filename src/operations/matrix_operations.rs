@@ -21,8 +21,6 @@ impl<T> MatrixOperations<T> where T: Mul<Output=T> + Add<Output=T>, T: FromStr +
             for i in 0..a.data().len() {
                 data.push(a.data()[i] * alpha + b.data()[i] * beta);
             }
-            dbg!(a.nrows(), a.ncols());
-            dbg!(b.nrows(), b.ncols());
             Matrix::new(data, a.ncols(), a.nrows())
         }
     }
@@ -43,25 +41,15 @@ impl<T> MatrixOperations<T> where T: Mul<Output=T> + Add<Output=T>, T: FromStr +
             return Err(DimensionError::InvalidDimension);
         }
 
-        let mut data: Vec<T> = Vec::new();
-        let mut buf: T;
-
-        for i in 0..a.nrows() {
-            for j in 0..b.ncols() {
-                buf = T::zero();
-                for k in 0..a.ncols() {
-                    buf += a.data()[i * a.ncols() + k] * b.data()[k * b.ncols() + j];
-                }
-                data.push(buf);
-            }
+        if b.nrows() == 1 {
+            Ok(Matrix::new(MatrixOperations::matrix_vector_mul(&a, &b), a.ncols(), b.nrows()))
+        } else {
+            Ok(Matrix::new(MatrixOperations::matrix_matrix_mul(&a, &b), a.ncols(), b.nrows()))
         }
 
-        let data = data;
-
-        Ok(Matrix::new(data, a.ncols(), b.nrows()))
     }
 
-    pub fn dot(a: Vector<T>, b: Vector<T>) -> Result<T, DimensionError> {
+    pub fn dot(a: Matrix<T>, b: Matrix<T>) -> Result<T, DimensionError> {
         if a.nrows() != 1 ||
             b.nrows() != 1 ||
             a.ncols() != b.ncols() {
@@ -78,6 +66,40 @@ impl<T> MatrixOperations<T> where T: Mul<Output=T> + Add<Output=T>, T: FromStr +
 
         Ok(dot)
     }
+
+    fn matrix_vector_mul(a: &Matrix<T>, b: &Matrix<T>) -> Vec<T>{
+        let mut data: Vec<T> = Vec::new();
+        let mut buf: T;
+
+        for i in 0..a.nrows() {
+            buf = T::zero();
+            for j in 0..b.ncols() {
+                buf += a.data()[i * a.ncols()] * b.data()[j];
+            }
+            data.push(buf);
+        }
+
+        let data = data;
+        data
+    }
+
+    fn matrix_matrix_mul(a: &Matrix<T>, b: &Matrix<T>) -> Vec<T> {
+        let mut data: Vec<T> = Vec::new();
+        let mut buf: T;
+
+        for i in 0..a.nrows() {
+            for j in 0..b.ncols() {
+                buf = T::zero();
+                for k in 0..a.ncols() {
+                    buf += a.data()[i * a.ncols() + k] * b.data()[k * b.ncols() + j];
+                }
+                data.push(buf);
+            }
+        }
+
+        let data = data;
+        data
+    }
 }
 
 
@@ -85,7 +107,6 @@ impl<T> MatrixOperations<T> where T: Mul<Output=T> + Add<Output=T>, T: FromStr +
 mod tests {
     use super::*;
     use assert_approx_eq::assert_approx_eq;
-
 
     #[test]
     fn add_with_alpha_zero_should_return_b() {
@@ -179,6 +200,57 @@ mod tests {
         let multiplicated_matrix: Matrix<f64> = MatrixOperations::mul(first_matrix, second_matrix).unwrap();
 
         assert_eq!(multiplicated_matrix.data(), &vec![12.0, 15.0, 18.0, 12.0, 15.0, 18.0, 12.0, 15.0, 18.0]);
+    }
+
+    #[test]
+    fn test_matrix_matrix_multiplication_with_non_symmetric_matrices() {
+        let first_matrix: Matrix<f64> = Matrix::new(
+            vec![
+                1.0, 1.0, 1.0,
+                1.0, 1.0, 1.0
+            ],
+            3,
+            2
+        );
+        let second_matrix: Matrix<f64> = Matrix::new(
+            vec![
+                1.0, 2.0,
+                4.0, 5.0,
+                7.0, 8.0
+            ],
+            2,
+            3
+        );
+
+        let multiplicated_matrix: Matrix<f64> = MatrixOperations::mul(first_matrix, second_matrix).unwrap();
+
+        assert_eq!(multiplicated_matrix.data(), &vec![12.0, 15.0, 12.0, 15.0]);
+    }
+
+    #[test]
+    fn test_matrix_vector_multiplication() {
+        let matrix: Matrix<f64> = Matrix::new(
+            vec![
+                1.0, 1.0, 1.0,
+                1.0, 1.0, 1.0,
+                1.0, 1.0, 1.0
+            ],
+            3,
+            3
+        );
+        let vec: Vector<f64> = Vector::new(
+            vec![
+                1.0,
+                4.0,
+                7.0
+            ],
+            3,
+            1
+        );
+
+        let matrix_vector: Matrix<f64> = MatrixOperations::mul(matrix, vec).unwrap();
+
+        assert_eq!(matrix_vector.data(), &vec![12.0, 12.0, 12.0]);
     }
 
     #[test]
