@@ -10,45 +10,49 @@ impl Krylov<f64> for Kaczmarz {
         unimplemented!()
     }
 
-    fn new_from_matrix(a: Matrix<f64>, b: Vector<f64>, eps: f64) -> Matrix<f64> {
+    fn new_from_matrix(a: Matrix<f64>, b: Vector<f64>, _eps: f64) -> Matrix<f64> {
 
         let mut x_old: Vector<f64> = Vector::new(
-            vec![0f64; b.ncols()],
-            b.ncols(),
-            1
+            vec![0f64; b.nrows()],
+            1,
+            b.nrows()
         );
 
         let mut x_new: Vector<f64>;
-        let mut temp: Vec<f64> = vec![0f64; 3];
+        let mut temp: Vec<f64>;
         let mut i: usize;
 
         for k in 0..200 {
-            i = k % 3;
-            temp = vec![0f64; 3];
-            temp.copy_from_slice(&a.data()[i*3..i*3 + 3]);
-
-            let temp = temp;
+            i = k % a.nrows();
+            temp = vec![0f64; a.nrows()];
+            temp.copy_from_slice(&a.data()[i * a.ncols()..i * a.ncols() + a.nrows()]);
 
             let ai: Vector<f64> = Vector::new(
                 temp,
-                b.ncols(),
-                1
+                1,
+                b.nrows()
 
             );
 
-            let scalar: f64 = (b.data()[i] - MatrixOperations::dot(ai.clone(), x_old.clone()).unwrap()) /
-                MatrixOperations::dot(ai.clone(), ai.clone()).unwrap();
+            let aa = b.data()[i];
+            let bb = MatrixOperations::dot(ai.clone(), x_old.clone()).unwrap();
+            let cc = MatrixOperations::dot(ai.clone(), ai.clone()).unwrap();
+
+            let scalar: f64 = (aa - bb) / cc;
+
             let norm_vec: Vector<f64> = MatrixOperations::add(ai.clone(), ai.clone(), scalar, 0f64);
+
 
             x_new = MatrixOperations::add(x_old.clone(), norm_vec, 1f64, 1f64);
 
+
+            let first = MatrixOperations::mul(a.clone(), x_new.clone()).unwrap();
+
             let residuum = MatrixOperations::euclidean_norm(
                 MatrixOperations::add(
-                    MatrixOperations::mul(a.clone(), x_new.clone()).unwrap(), b.clone(), 1f64, -1f64));
+                    first, b.clone(), 1f64, -1f64));
 
             dbg!(residuum);
-
-
             x_old = x_new.to_owned();
 
         }
@@ -79,8 +83,8 @@ mod tests {
             vec![
                 6.0, -4.0, 27.0
             ],
-            3,
             1,
+            3,
         );
 
         let test: Vector<f64> = Kaczmarz::new_from_matrix(a, b, 0.001);
