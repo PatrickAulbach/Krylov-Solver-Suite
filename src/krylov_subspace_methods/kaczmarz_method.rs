@@ -22,7 +22,7 @@ impl Krylov<f64> for Kaczmarz {
         let mut temp: Vec<f64> = vec![0f64; 3];
         let mut i: usize;
 
-        for k in 0..100 {
+        for k in 0..200 {
             i = k % 3;
             temp = vec![0f64; 3];
             temp.copy_from_slice(&a.data()[i*3..i*3 + 3]);
@@ -41,6 +41,12 @@ impl Krylov<f64> for Kaczmarz {
             let norm_vec: Vector<f64> = MatrixOperations::add(ai.clone(), ai.clone(), scalar, 0f64);
 
             x_new = MatrixOperations::add(x_old.clone(), norm_vec, 1f64, 1f64);
+
+            let residuum = MatrixOperations::euclidean_norm(
+                MatrixOperations::add(
+                    MatrixOperations::mul(a.clone(), x_new.clone()).unwrap(), b.clone(), 1f64, -1f64));
+
+            dbg!(residuum);
 
 
             x_old = x_new.to_owned();

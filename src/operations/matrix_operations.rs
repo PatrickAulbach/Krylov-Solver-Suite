@@ -74,7 +74,7 @@ impl<T> MatrixOperations<T> where T: Mul<Output=T> + Add<Output=T>, T: FromStr +
         for i in 0..a.nrows() {
             buf = T::zero();
             for j in 0..b.ncols() {
-                buf += a.data()[i * a.ncols()] * b.data()[j];
+                buf += a.data()[i * a.ncols() + j] * b.data()[j];
             }
             data.push(buf);
         }
@@ -162,6 +162,54 @@ mod tests {
     }
 
     #[test]
+    fn add_with_beta_negative_should_return_correct_solution() {
+        let first_matrix: Matrix<f64> = Matrix::new(
+            vec![
+                1.0, 1.0, 1.0,
+                1.0, 1.0, 1.0,
+                1.0, 1.0, 1.0
+            ],
+            3,
+            3,
+        );
+        let second_matrix: Matrix<f64> = Matrix::new(
+            vec![
+                1.0, 1.0, 1.0,
+                1.0, 1.0, 1.0,
+                1.0, 1.0, 1.0
+            ],
+            3,
+            3,
+        );
+
+        let added_matrix: Matrix<f64> = MatrixOperations::add(first_matrix, second_matrix, 1f64, -1f64);
+
+        assert_eq!(added_matrix.data(), &vec![0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]);
+    }
+
+    #[test]
+    fn add_vector_with_beta_negative_should_return_correct_solution() {
+        let first_matrix: Matrix<f64> = Matrix::new(
+            vec![
+                1.0, 1.0, 1.0
+            ],
+            3,
+            1,
+        );
+        let second_matrix: Matrix<f64> = Matrix::new(
+            vec![
+                1.0, 1.0, 1.0
+            ],
+            3,
+            1,
+        );
+
+        let added_matrix: Matrix<f64> = MatrixOperations::add(first_matrix, second_matrix, 1f64, -1f64);
+
+        assert_eq!(added_matrix.data(), &vec![0.0, 0.0, 0.0]);
+    }
+
+    #[test]
     fn euclidian_norm_should_be_correct() {
         let vector: Vector<f64> = Vector::new(
             vec![
@@ -232,17 +280,17 @@ mod tests {
         let matrix: Matrix<f64> = Matrix::new(
             vec![
                 1.0, 1.0, 1.0,
-                1.0, 1.0, 1.0,
-                1.0, 1.0, 1.0
+                0.0, 2.0, 5.0,
+                2.0, 5.0, -1.0
             ],
             3,
             3
         );
         let vec: Vector<f64> = Vector::new(
             vec![
-                1.0,
-                4.0,
-                7.0
+                2.0,
+                2.0,
+                2.0
             ],
             3,
             1
@@ -250,7 +298,7 @@ mod tests {
 
         let matrix_vector: Matrix<f64> = MatrixOperations::mul(matrix, vec).unwrap();
 
-        assert_eq!(matrix_vector.data(), &vec![12.0, 12.0, 12.0]);
+        assert_eq!(matrix_vector.data(), &vec![6.0, 14.0, 12.0]);
     }
 
     #[test]
