@@ -60,6 +60,7 @@ impl Krylov<f64> for Kaczmarz {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use assert_approx_eq::assert_approx_eq;
 
     #[test]
     fn test() {
@@ -84,6 +85,8 @@ mod tests {
 
         let test: Vector<f64> = Kaczmarz::new_from_matrix(a, b, 0.001);
 
-        assert_eq!(test.data(), &vec![5f64, 3f64, -2f64]);
+        assert_approx_eq!(test.data()[0], 5f64, 0.001);
+        assert_approx_eq!(test.data()[1], 3f64, 0.001);
+        assert_approx_eq!(test.data()[2], -2f64, 0.001);
     }
 }
