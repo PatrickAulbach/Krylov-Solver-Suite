@@ -10,8 +10,13 @@ impl Krylov<f64> for Kaczmarz {
         unimplemented!()
     }
 
-    fn new_from_matrix(a: Matrix<f64>, b: Vector<f64>, _eps: f64) -> Matrix<f64> {
+    fn new_from_matrix(a: Matrix<f64>, b: Vector<f64>, eps: f64) -> Matrix<f64> {
+        Kaczmarz::kaczmarz(a, b, eps)
+    }
+}
 
+impl Kaczmarz {
+    fn kaczmarz(a: Matrix<f64>, b: Vector<f64>, eps: f64) -> Matrix<f64>{
         let mut x_old: Vector<f64> = Vector::new(
             vec![0f64; b.nrows()],
             1,
@@ -21,8 +26,9 @@ impl Krylov<f64> for Kaczmarz {
         let mut x_new: Vector<f64>;
         let mut temp: Vec<f64>;
         let mut i: usize;
+        let mut k: usize = 0;
 
-        for k in 0..200 {
+        loop {
             i = k % a.nrows();
             temp = vec![0f64; a.nrows()];
             temp.copy_from_slice(&a.data()[i * a.ncols()..i * a.ncols() + a.nrows()]);
@@ -39,18 +45,19 @@ impl Krylov<f64> for Kaczmarz {
 
             let norm_vec: Vector<f64> = MatrixOperations::add(&ai, &ai, scalar, 0f64);
 
-
             x_new = MatrixOperations::add(&x_old, &norm_vec, 1f64, 1f64);
 
-
-            let first = MatrixOperations::mul(&a, &x_new).unwrap();
-
-            let residuum = MatrixOperations::euclidean_norm(
+            let residue = MatrixOperations::euclidean_norm(
                 &MatrixOperations::add(
-                    &first, &b, 1f64, -1f64));
+                    &MatrixOperations::mul(&a, &x_new).unwrap(), &b, 1f64, -1f64));
 
             x_old = x_new.to_owned();
 
+            if residue < eps {
+                break
+            }
+
+            k += 1;
         }
 
         x_old
