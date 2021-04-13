@@ -11,11 +11,11 @@ pub struct MatrixOperations<T> {
 }
 
 impl<T> MatrixOperations<T> where T: Mul<Output=T> + Add<Output=T>, T: FromStr + Copy + Num + AddAssign {
-    pub fn add(a: Matrix<T>, b: Matrix<T>, alpha: T, beta: T) -> Matrix<T> {
+    pub fn add(a: &Matrix<T>, b: &Matrix<T>, alpha: T, beta: T) -> Matrix<T> {
         if alpha == T::zero() && beta == T::one() {
-            b
+            b.to_owned()
         } else if beta == T::zero() && alpha == T::one() {
-            a
+            a.to_owned()
         } else {
             let mut data: Vec<T> = Vec::new();
             for i in 0..a.data().len() {
@@ -25,7 +25,7 @@ impl<T> MatrixOperations<T> where T: Mul<Output=T> + Add<Output=T>, T: FromStr +
         }
     }
 
-    pub fn euclidean_norm(vector: Vector<T>) -> T where T: Sqrt {
+    pub fn euclidean_norm(vector: &Vector<T>) -> T where T: Sqrt {
         let mut norm = T::zero();
 
         for i in 0..vector.data().len() {
@@ -35,7 +35,7 @@ impl<T> MatrixOperations<T> where T: Mul<Output=T> + Add<Output=T>, T: FromStr +
         norm.sqrt()
     }
 
-    pub fn mul(a: Matrix<T>, b: Matrix<T>) -> Result<Matrix<T>, DimensionError> {
+    pub fn mul(a: &Matrix<T>, b: &Matrix<T>) -> Result<Matrix<T>, DimensionError> {
         type Error = DimensionError;
         if a.ncols() != b.nrows() {
             return Err(DimensionError::InvalidDimension);
@@ -49,7 +49,7 @@ impl<T> MatrixOperations<T> where T: Mul<Output=T> + Add<Output=T>, T: FromStr +
 
     }
 
-    pub fn dot(a: Matrix<T>, b: Matrix<T>) -> Result<T, DimensionError> {
+    pub fn dot(a: &Matrix<T>, b: &Matrix<T>) -> Result<T, DimensionError> {
 
         let mut dot = T::zero();
 

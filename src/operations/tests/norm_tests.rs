@@ -14,7 +14,7 @@ mod tests {
             3,
         );
 
-        let norm = MatrixOperations::euclidean_norm(vector);
+        let norm = MatrixOperations::euclidean_norm(&vector);
 
         assert_approx_eq!(3.74165738677, norm, 1e-3f64);
     }

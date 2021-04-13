@@ -34,25 +34,21 @@ impl Krylov<f64> for Kaczmarz {
 
             );
 
-            let aa = b.data()[i];
-            let bb = MatrixOperations::dot(ai.clone(), x_old.clone()).unwrap();
-            let cc = MatrixOperations::dot(ai.clone(), ai.clone()).unwrap();
+            let scalar: f64 = (b.data()[i] - MatrixOperations::dot(&ai, &x_old).unwrap()) /
+                MatrixOperations::dot(&ai, &ai).unwrap();
 
-            let scalar: f64 = (aa - bb) / cc;
-
-            let norm_vec: Vector<f64> = MatrixOperations::add(ai.clone(), ai.clone(), scalar, 0f64);
+            let norm_vec: Vector<f64> = MatrixOperations::add(&ai, &ai, scalar, 0f64);
 
 
-            x_new = MatrixOperations::add(x_old.clone(), norm_vec, 1f64, 1f64);
+            x_new = MatrixOperations::add(&x_old, &norm_vec, 1f64, 1f64);
 
 
-            let first = MatrixOperations::mul(a.clone(), x_new.clone()).unwrap();
+            let first = MatrixOperations::mul(&a, &x_new).unwrap();
 
             let residuum = MatrixOperations::euclidean_norm(
-                MatrixOperations::add(
-                    first, b.clone(), 1f64, -1f64));
+                &MatrixOperations::add(
+                    &first, &b, 1f64, -1f64));
 
-            dbg!(residuum);
             x_old = x_new.to_owned();
 
         }

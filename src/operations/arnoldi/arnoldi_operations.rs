@@ -15,7 +15,7 @@ impl<'a, T> ArnoldiOperations<T> where T: Mul<Output = T> + Add<Output = T>, T: 
 
         for i in 0..q.ncols() {
             let q_vec = Vector::new(vec![q.data()[i].clone()], q.nrows(), 1);
-            v = MatrixOperations::add(v, q_vec, T::one(), -h.data()[i]);
+            v = MatrixOperations::add(&v, &q_vec, T::one(), -h.data()[i]);
         }
 
         let v = v;
