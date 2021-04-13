@@ -24,7 +24,7 @@ mod tests {
             3
         );
 
-        let multiplicated_matrix: Matrix<f64> = MatrixOperations::mul(first_matrix, second_matrix).unwrap();
+        let multiplicated_matrix: Matrix<f64> = MatrixOperations::mul(&first_matrix, &second_matrix).unwrap();
 
         assert_eq!(multiplicated_matrix.data(), &vec![12.0, 15.0, 18.0, 12.0, 15.0, 18.0, 12.0, 15.0, 18.0]);
     }
@@ -49,7 +49,7 @@ mod tests {
             3
         );
 
-        let multiplicated_matrix: Matrix<f64> = MatrixOperations::mul(first_matrix, second_matrix).unwrap();
+        let multiplicated_matrix: Matrix<f64> = MatrixOperations::mul(&first_matrix, &second_matrix).unwrap();
 
         assert_eq!(multiplicated_matrix.data(), &vec![12.0, 15.0, 12.0, 15.0]);
     }
@@ -75,7 +75,7 @@ mod tests {
             3
         );
 
-        let matrix_vector: Matrix<f64> = MatrixOperations::mul(matrix, vec).unwrap();
+        let matrix_vector: Matrix<f64> = MatrixOperations::mul(&matrix, &vec).unwrap();
 
         assert_eq!(matrix_vector.data(), &vec![6.0, 14.0, 12.0]);
     }

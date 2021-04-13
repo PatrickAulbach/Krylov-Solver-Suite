@@ -16,7 +16,7 @@ mod tests {
             5
         );
 
-        let dot: f64 = MatrixOperations::dot(a, b).unwrap();
+        let dot: f64 = MatrixOperations::dot(&a, &b).unwrap();
 
         assert_eq!(dot, 15f64);
     }
