@@ -90,7 +90,7 @@ mod tests {
             3,
         );
 
-        let test: Vector<f64> = Kaczmarz::new_from_matrix(a, b, 0.001);
+        let test: Vector<f64> = Kaczmarz::new_from_matrix(a, b, 0.0001);
 
         assert_approx_eq!(test.data()[0], 5f64, 0.001);
         assert_approx_eq!(test.data()[1], 3f64, 0.001);
